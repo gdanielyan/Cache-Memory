@@ -102,6 +102,8 @@ void setParameters(){
 		printf("\n** Error - cache size  not a power of 2!\n");
 	}else if(blockSize > cacheSize){
 		printf("\n** Error - block size larger than cache size!\n");
+	}else if(!isPowerOfTwo(blockSize)){
+		printf("\n** Error - block size not a power of 2!\n");
 	}else{
 		numOfMainMemBlocks = mainMemorySize/blockSize;//might not need
 		numOfCacheLines = cacheSize/blockSize;
@@ -133,11 +135,11 @@ void readCache(){
 	if(cache[blockNum].block == NULL || cache[blockNum].tag != tagNum){
 		if(cache[blockNum].block == NULL){
 			cache[blockNum].block = malloc(sizeof(int)*blockSize);//allocate a new block if our block was null
-			int i;
-			for(i=0; i < blockSize; i++){
-				cache[blockNum].block[i] = mainMemory[startingMemory++];
-				cache[blockNum].tag = tagNum;
-			}
+		}
+		int i;
+		for(i=0; i < blockSize; i++){
+			cache[blockNum].block[i] = mainMemory[startingMemory++];
+			cache[blockNum].tag = tagNum;
 		}
 		value = cache[blockNum].block[wordNum];//get the value from cache. if the value is incorrect then we must have some problem within the calculations.
 		printf("\n** Read Miss...First Load Block from Memory!");
